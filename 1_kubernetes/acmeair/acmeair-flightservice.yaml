@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acmeair-flightservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: acmeair-flight-deployment
+  template:
+    metadata:
+      labels:
+        name: acmeair-flight-deployment
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9080"
+    spec:
+      containers:
+      - name: acmeair-flightservice-java
+        image: vasth/acmeair-flightservice
+        ports:
+          - containerPort: 9080
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            memory: 50Mi
+            cpu: 50m
+          limits:
+            memory: 100Mi
+            cpu: 100m
+        env:
+        - name: USERNAME
+          value: admin
+        - name: PASSWORD
+          value: password
+        - name: MONGO_HOST
+          value: acmeair-flight-db
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 9080
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 9080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: flightservice
+  name: acmeair-flight-service
+spec:
+  ports:
+    - port: 9080
+  selector:
+    name: acmeair-flight-deployment
+---
+##### Flight Database #####
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: acmeair-flight-db
+  name: acmeair-flight-db
+spec:
+  ports:
+  - name: "27017"
+    port: 27017
+    targetPort: 27017
+  selector:
+    name: acmeair-flight-db
+---
+# login mongo
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: acmeair-flight-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: acmeair-flight-db
+  template:
+    metadata:
+      labels:
+        name: acmeair-flight-db
+    spec:
+      containers:
+      - image: mongo
+        name: acmeair-flight-db
+        ports:
+        - containerPort: 27017
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: 100m
+          limits:
+            memory: 200Mi
+            cpu: 200m

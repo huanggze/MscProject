@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite ^/static/(.*)$ /acmeair/static/$1 redirect;
+  name: acmeair-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /flight(/|$)(.*)
+        pathType: Exact
+        backend:
+          service:
+            name: acmeair-flight-service
+            port:
+              number: 9080
+      - path: /acmeair(/|$)(.*)
+        pathType: Exact
+        backend:
+          service:
+            name: acmeair-main-service
+            port:
+              number: 9080
+      - path: /customer(/|$)(.*)
+        pathType: Exact
+        backend:
+          service:
+            name: acmeair-customer-service
+            port: 
+              number: 9080
+      - path: /booking(/|$)(.*)
+        pathType: Exact
+        backend:
+          service:
+            name: acmeair-booking-service
+            port: 
+              number: 9080
