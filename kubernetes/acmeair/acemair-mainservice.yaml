@@ -23,11 +23,11 @@ spec:
         imagePullPolicy: IfNotPresent
         resources:
           requests:
-            memory: 50Mi
-            cpu: 50m
+            memory: 200Mi
+            cpu: 200m
           limits:
-            memory: 100Mi
-            cpu: 100m
+            memory: 400Mi
+            cpu: 400m
         env:
         - name: USERNAME
           value: admin

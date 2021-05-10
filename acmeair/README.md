@@ -10,7 +10,7 @@ To run the project, we suggest deploying all the services onto a Kubernetes clus
 
 ## APIs
 
-The following lists some API calls examples, with 192.168.99.102 being the API gateway's address and `http` for HTTPie utility. It can be a reference since the upstream project doesn't detail these information.
+The following lists some API calls examples, with 192.168.99.102 being the API gateway's address (more specifically, it's the address of Ingress) and `http` for HTTPie utility. It can be a reference since the upstream project doesn't detail these information.
 
 ### Get Prometheus Metrics
 
