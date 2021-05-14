@@ -2,19 +2,19 @@
 
 ## AWS
 
-Refer to [Get started tutorial](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html) for creating VM instances, with [CentOS 7 (x86_64) - with Updates HVM](https://aws.amazon.com/marketplace/pp/B00O7WM7QW?ref=cns_1clkPro) for machine images.
+Refer to [Get started tutorial](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html) for creating VM instances, with Ubuntu Server 18.04 LTS (HVM), SSD Volume Type for machine images.
 
 We will have 1 Master + 3 Workers setup of Kubernetes. Besides, we will have a client machine operating outsides the Kubernetes cluster for feeding loads. The choice of machines are as follows:
 
 | Role | Instance Type |
 |---|---|
 |Master|t3.small (2 vCPU, 2 GB)|
-|Worker|t3.medium (2 vCPU, 4 GB)|
+|Worker|t3.xlarge (4 vCPU, 16 GB)|
 |Client|t3.small (2 vCPU, 2 GB)|
 
 ## Install Kubernetes
 
-Read [Creating a cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/) for more information on how to create a Kubernetes cluster. The following is a brief summary.
+Read [Creating a cluster with kubeadm](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/) for more information on how to create a Kubernetes cluster. The following is a brief summary. SSH to the instance and login as 'ubuntu' using the key specified at launch.
 
 1. Install kubeadm, kubelet, kubectl across all nodes. Besides, pay attention to the following points:
     - Swap disabled. You MUST disable swap in order for the kubelet to work properly. You can do that by `swapoff -a`.
@@ -27,6 +27,8 @@ Read [Creating a cluster with kubeadm](https://kubernetes.io/docs/setup/producti
 ## Install Ingress Controller
 
 Read [Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/#using-helm) for installing Nginx Ingress Controller via Helm v3.0. Also read [Helm](https://helm.sh/docs/intro/install/) for how to install Helm. After that, you run the following commands on your master nodes:
+
+Note that you need to delete ValidatingWebhookConfiguration due to this [issue](https://github.com/kubernetes/ingress-nginx/issues/5401).
 
 ```
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
