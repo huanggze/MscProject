@@ -10,17 +10,17 @@ We will have 1 Master + 3 Workers setup of Kubernetes. Besides, we will have a c
 |---|---|
 |Master|t3.medium (2 vCPU, 4 GB)|
 |Worker|t3.xlarge (4 vCPU, 16 GB)|
-|Bastion|t3.medium (2 vCPU, 4 GB)|
+|Client|t3.medium (2 vCPU, 4 GB)|
 
 ## Install Kubernetes
 
-Read [Deploying to AWS](https://kops.sigs.k8s.io/getting_started/aws/) for more information on how to create a Kubernetes cluster on AWS EC2. The following is a brief summary. SSH to the bastion machine and login as 'ubuntu' with your ssh key.
+Read [Deploying to AWS](https://kops.sigs.k8s.io/getting_started/aws/) for more information on how to create a Kubernetes cluster on AWS EC2. The following is a brief summary. SSH to the client machine and login as 'ubuntu' with your ssh key.
 
 ```
 ssh -i <YOUR_KEY_PAIR>.cer ubutnu@<YOUR_EC2_PUBLIC_IPV4_DNS>
 ```
 
-1. Install kops (v1.20.1), kubectl(v1.21.1), aws cli(1.18.69) on bastion machine.
+1. Install kops (v1.20.1), kubectl(v1.21.1), aws cli(1.18.69) on client machine.
 ```shell
 # install kops
 curl -Lo kops https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64
@@ -36,7 +36,7 @@ sudo mv ./kubectl /usr/local/bin/kubectl
 sudo apt update
 sudo apt install awscli -y
 ```   
-2. On AWS IAM console, create user, usergroup with the name `kops`. Assign `kops` with full access (AdministratorAccess). Keep your Access key ID, Secret access key, then configure aws on your bastion machine.
+2. On AWS IAM console, create user, usergroup with the name `kops`. Assign `kops` with full access (AdministratorAccess). Keep your Access key ID, Secret access key, then configure aws on your client machine.
 ```shell
 $ aws configure
 AWS Access Key ID [None]: xxxxxxx
@@ -72,7 +72,7 @@ aws s3api create-bucket \
     --bucket huanggze-example-com-state-store \
     --region eu-central-1
 ```
-5. Prepare cluster instance for creation. We will create in your existing VPC where the bastion is located.
+5. Prepare cluster instance for creation. We will create in your existing VPC where the client is located.
 ```shell
 export NAME=myfirstcluster.huanggze.example.com
 export KOPS_STATE_STORE=s3://huanggze-example-com-state-store
@@ -145,7 +145,7 @@ ssh-keygen
 kops create secret --name myfirstcluster.huanggze.example.com sshpublickey admin -i ~/.ssh/id_rsa.pub
 kops update cluster myfirstcluster.huanggze.example.com --yes
 ```
-8. Export kubeconfig so that you can use kubectl on your bastion machine
+8. Export kubeconfig so that you can use kubectl on your client machine
 ```shell
 kops export kubecfg --admin
 ```
@@ -164,26 +164,92 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 
 ## Install Prometheus System
 
-1. Apply Prometheus prerequisite YAML first
-
+1. Apply Prometheus YAML files:
 ```
-kubectl apply -R -f prometheus-prerequisite
-```
-
-2. Apply Prometheus operator YAML
-
-```
-kubectl apply -R -f prometheus-operator
+git clone  https://github.com/huanggze/MScProject.git
+cd MScProject/kubernetes
+kubectl apply -f kube-prometheu/setup
+kubectl apply -f kube-prometheu
 ```
 
-3. Apply Prometheus adapter YAML
+2. Verify custom metrics endpoints
+```shell
+$ kubectl get apiservice v1beta2.custom.metrics.k8s.io
+NAME                            SERVICE                         AVAILABLE   AGE
+v1beta2.custom.metrics.k8s.io   monitoring/prometheus-adapter   True        9m1s
 
-Note that you need to generate some necessary certs for serving HTTPS traffic first (see [gencerts.sh](https://github.com/kubernetes-sigs/prometheus-adapter/tree/master/deploy)). Run `sh gencerts.sh` and ddd the generated YAML file `cm-adapter-serving-certs.yaml` to the prometheus-adapter folder.
-
-Then, apply Prometheus adapter YAML.
-
+$ sudo apt install jq -y
+$ kubectl get --raw "/apis/custom.metrics.k8s.io/v1beta2" | jq
+{
+  "kind": "APIResourceList",
+  "apiVersion": "v1",
+  "groupVersion": "custom.metrics.k8s.io/v1beta2",
+  "resources": []
+}
 ```
-kubectl apply -R -f prometheus-adapter
+
+3. View prometheus console on your browser
+```shell
+$ kubectl get svc -n monitoring prometheus-k8s
+NAME             TYPE           CLUSTER-IP      EXTERNAL-IP                                                                 PORT(S)          AGE
+prometheus-k8s   LoadBalancer   100.62.135.64   xxxx.eu-central-1.elb.amazonaws.com   9090:30993/TCP   22m
+```
+
+Now you can see Prometheus console with the url http://xxxx.eu-central-1.elb.amazonaws.com:9090
+
+
+## Install EFK for logging
+
+1. Install helm.
+We will use [helm](https://helm.sh/docs/intro/install/#from-apt-debianubuntu) to install elasticsearch and kibana.
+```shell
+curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+sudo apt-get install apt-transport-https --yes
+echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+sudo apt-get update
+sudo apt-get install helm
+```   
+2. Install elasticsearch
+```shell
+kubectl create ns logging
+helm repo add elastic https://helm.elastic.co
+helm install elasticsearch elastic/elasticsearch --namespace logging --set service.type=LoadBalancer
+```
+
+Verify your ES cluster
+```shell
+$ kubectl get svc -n logging
+NAME                            TYPE           CLUSTER-IP      EXTERNAL-IP                                                                  PORT(S)                         AGE
+elasticsearch-master            LoadBalancer   100.56.73.190   xxxxx.eu-central-1.elb.amazonaws.com   9200:32657/TCP,9300:32616/TCP   7s
+
+$ curl xxxxx.eu-central-1.elb.amazonaws.com:9200
+{
+  "name" : "elasticsearch-master-2",
+  "cluster_name" : "elasticsearch",
+  "cluster_uuid" : "oRRxyMQeQFmNWiin6HCaaA",
+  "version" : {
+    "number" : "7.12.1",
+    "build_flavor" : "default",
+    "build_type" : "docker",
+    "build_hash" : "3186837139b9c6b6d23c3200870651f10d3343b7",
+    "build_date" : "2021-04-20T20:56:39.040728659Z",
+    "build_snapshot" : false,
+    "lucene_version" : "8.8.0",
+    "minimum_wire_compatibility_version" : "6.8.0",
+    "minimum_index_compatibility_version" : "6.0.0-beta1"
+  },
+  "tagline" : "You Know, for Search"
+}
+```
+
+To clear all es data:
+```shell
+curl -XDELETE xxxxx.eu-central-1.elb.amazonaws.com:9200/_all
+```
+
+3. Install kibana for browsing logs
+```shell
+helm install kibana elastic/kibana --namespace logging --set service.type=LoadBalancer,elasticsearchHosts="http://elasticsearch-master.logging:9200"
 ```
 
 ## Install Acme Air
