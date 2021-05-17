@@ -16,4 +16,4 @@ spec:
         name: query_per_second
       target:
         type: AverageValue
-        averageValue: "1"
+        averageValue: "200"
