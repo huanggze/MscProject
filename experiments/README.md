@@ -1,5 +1,31 @@
 # Experiments
 
+## Preparation
+
+1. Install openjdk (11.0.11), jmeter (5.4.1) on client machine.
+```shell
+apt install default-jre -y
+wget https://apache.newfountain.nl//jmeter/binaries/apache-jmeter-5.4.1.tgz
+tar zxvf apache-jmeter-5.4.1.tgz
+export PATH="$PATH":/home/ubuntu/apache-jmeter-5.4.1/bin
+jmeter --version
+```
+
+2. On worker nodes, install kubectl and reuse kubelet's kubeconfig.
+```shell
+# install kubectl
+curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin/kubectl
+
+# reuse kubelet's kubeconfig
+mkdir .kube
+sudo cp /var/lib/kubelet/kubeconfig .kube/
+sudo chmod +r .kube/kubeconfig
+export KUBECONFIG=/home/ubuntu/.kube/kubeconfig
+kubectl get nodes
+```
+
 ## 1. Auto-scaling Performance Test for a single Service
 
 The scaling target we examine is Flight Service. We use JMeter to generate and feed loads. 
@@ -9,7 +35,7 @@ First, you need to have Kubernetes and Acme Air system up and running. Load Flig
 Let Flight Service flies with constant, moderate traffic demand for over 5 minutes. Then start adding loading. Record the time spent for this auto-scaling test. Flight Service is expected to bring replicas from 1 to 3.
 
 ```
-jmeter -n -t test_plan_1.jmx -l log_1.jtl 
+jmeter -n -t qps_500.jmx -l log_500.jtl 
 ```
 
 Now, we elaborate on how to determine the time range of each substage. Note the timestamp is a millisecond precision level due to this is how Kubernetes code is structured (see https://github.com/kubernetes/kubernetes/issues/81026).
