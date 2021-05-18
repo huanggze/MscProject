@@ -1,0 +1,11 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: bookingservice
+spec:
+  endpoints:
+  - targetPort: 9080
+    path: /prometheus
+  selector:
+    matchLabels:
+      app: bookingservice

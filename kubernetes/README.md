@@ -168,8 +168,8 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 ```
 git clone  https://github.com/huanggze/MScProject.git
 cd MScProject/kubernetes
-kubectl apply -f kube-prometheu/setup
-kubectl apply -f kube-prometheu
+kubectl apply -f kube-prometheus/setup
+kubectl apply -f kube-prometheus
 ```
 
 2. Verify custom metrics endpoints
@@ -250,6 +250,12 @@ curl -XDELETE xxxxx.eu-central-1.elb.amazonaws.com:9200/_all
 3. Install kibana for browsing logs
 ```shell
 helm install kibana elastic/kibana --namespace logging --set service.type=LoadBalancer,elasticsearchHosts="http://elasticsearch-master.logging:9200"
+```
+
+4. Install Fluentbit
+```shell
+cd /MScProject/kubernetes
+kubectl apply -f /logging
 ```
 
 ## Install Acme Air
