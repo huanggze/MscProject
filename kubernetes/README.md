@@ -198,7 +198,7 @@ prometheus-k8s   LoadBalancer   100.62.135.64   xxxx.eu-central-1.elb.amazonaws.
 Now you can see Prometheus console with the url http://xxxx.eu-central-1.elb.amazonaws.com:9090
 
 
-## Install EFK for logging
+## Install EFK for logging (Optional)
 
 1. Install helm.
 We will use [helm](https://helm.sh/docs/intro/install/#from-apt-debianubuntu) to install elasticsearch and kibana.
@@ -253,6 +253,7 @@ helm install kibana elastic/kibana --namespace logging --set service.type=LoadBa
 ```
 
 4. Install Fluentbit
+We will deploy Fluentbit daemonset to collect kube-apiserver logs only.
 ```shell
 cd /MScProject/kubernetes
 kubectl apply -f /logging

@@ -11,7 +11,7 @@ export PATH="$PATH":/home/ubuntu/apache-jmeter-5.4.1/bin
 jmeter --version
 ```
 
-2. On worker nodes, install kubectl and reuse kubelet's kubeconfig.
+2. On worker nodes, install kubectl, reuse kubelet's kubeconfig and pull flightservice images.
 ```shell
 # install kubectl
 curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
@@ -24,6 +24,12 @@ sudo cp /var/lib/kubelet/kubeconfig .kube/
 sudo chmod +r .kube/kubeconfig
 export KUBECONFIG=/home/ubuntu/.kube/kubeconfig
 kubectl get nodes
+
+# pull flightservice image
+# print worker node ip
+kubectl get node -l kubernetes.io/role=node -ojson | jq .items[].status.addresses[0].address | tr -d '"'
+ssh ubuntu:<node_ip>
+sudo docker pull vasth/acmeair-flightservice
 ```
 
 ## 1. Auto-scaling Performance Test for a single Service
