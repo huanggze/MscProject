@@ -38,10 +38,10 @@ The scaling target we examine is Flight Service. We use JMeter to generate and f
 
 First, you need to have Kubernetes and Acme Air system up and running. Load Flight Service database by invoking `<ingress-ip>/flight/loader/load`
 
-Let Flight Service flies with constant, moderate traffic demand for over 5 minutes. Then start adding loading. Record the time spent for this auto-scaling test. Flight Service is expected to bring replicas from 1 to 3.
+Let Flight Service flies with constant, moderate traffic demand for over 5 minutes. Then start adding loading. Record the time spent for this auto-scaling test. Flight Service is expected to bring replicas from 1 to 3. Remeber if you existing log_200_to_1200.jtl, remove it first.
 
 ```
-jmeter -n -t qps_500.jmx -l log_500.jtl 
+jmeter -n -t qps_200_to_1200.jmx -l log_200_to_1200.jtl 
 ```
 
 Now, we elaborate on how to determine the time range of each substage. Note the timestamp is a millisecond precision level due to this is how Kubernetes code is structured (see https://github.com/kubernetes/kubernetes/issues/81026).
