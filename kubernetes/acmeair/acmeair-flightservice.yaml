@@ -93,8 +93,8 @@ spec:
         - containerPort: 27017
         resources:
           requests:
-            memory: 400Mi
-            cpu: 400m
+            memory: 500Mi
+            cpu: 500m
           limits:
-            memory: 800Mi
-            cpu: 800m
+            memory: 1000Mi
+            cpu: 1000m
