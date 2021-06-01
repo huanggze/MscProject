@@ -16,8 +16,14 @@ spec:
       containers:
         - name: hello-world
           image: vasth/msc-project-hello-world-go
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /hello
+              port: 8080
+
 ---
 apiVersion: v1
 kind: Service
