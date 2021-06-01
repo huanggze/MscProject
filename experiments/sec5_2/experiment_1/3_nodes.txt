@@ -1,0 +1,40 @@
+ubuntu@xxx:~$ kubectl patch deployment acmeair-flightservice  -p '{"spec":{"replicas":6}}'
+deployment.apps/acmeair-flightservice patched
+
+ubuntu@xxx:~$ kubectl get po
+NAME                                     READY   STATUS    RESTARTS   AGE
+acmeair-flight-db-69df8f87b4-6kfns       1/1     Running   0          27m
+acmeair-flightservice-76d48bfb54-47k8l   0/1     Running   0          10s
+acmeair-flightservice-76d48bfb54-54mjr   0/1     Running   0          10s
+acmeair-flightservice-76d48bfb54-b29bg   1/1     Running   0          27m
+acmeair-flightservice-76d48bfb54-gkdjg   0/1     Running   0          10s
+acmeair-flightservice-76d48bfb54-hv8rg   0/1     Running   0          10s
+acmeair-flightservice-76d48bfb54-st78x   0/1     Running   0          10s
+
+ubuntu@xxx:~$ kubectl logs -n kube-system `kubectl get po -n kube-system -l k8s-app=kube-scheduler -o jsonpath='{.items[0].metadata.name}'` | grep -E `kubectl get po -l name=acmeair-flight-deployment -o go-template --template='{{range $i, $e := .items}}{{if $i}}|{{end}}{{$e.metadata.name}}{{end}}'` | grep -E "eventhandlers\.go|scheduler\.go"
+
+I0531 13:22:25.271895       1 eventhandlers.go:172] add event for unscheduled pod default/acmeair-flightservice-76d48bfb54-54mjr
+I0531 13:22:25.272000       1 scheduler.go:459] Attempting to schedule pod: default/acmeair-flightservice-76d48bfb54-54mjr
+I0531 13:22:25.284027       1 scheduler.go:604] "Successfully bound pod to node" pod="default/acmeair-flightservice-76d48bfb54-54mjr" node="ip-172-31-24-227.eu-central-1.compute.internal" evaluatedNodes=4 feasibleNodes=3
+I0531 13:22:25.285389       1 eventhandlers.go:209] delete event for unscheduled pod default/acmeair-flightservice-76d48bfb54-54mjr
+I0531 13:22:25.285492       1 eventhandlers.go:229] add event for scheduled pod default/acmeair-flightservice-76d48bfb54-54mjr
+I0531 13:22:25.285549       1 eventhandlers.go:172] add event for unscheduled pod default/acmeair-flightservice-76d48bfb54-47k8l
+I0531 13:22:25.286123       1 scheduler.go:459] Attempting to schedule pod: default/acmeair-flightservice-76d48bfb54-47k8l
+I0531 13:22:25.301853       1 eventhandlers.go:172] add event for unscheduled pod default/acmeair-flightservice-76d48bfb54-gkdjg
+I0531 13:22:25.301895       1 scheduler.go:459] Attempting to schedule pod: default/acmeair-flightservice-76d48bfb54-gkdjg
+I0531 13:22:25.310643       1 eventhandlers.go:209] delete event for unscheduled pod default/acmeair-flightservice-76d48bfb54-47k8l
+I0531 13:22:25.310854       1 scheduler.go:604] "Successfully bound pod to node" pod="default/acmeair-flightservice-76d48bfb54-47k8l" node="ip-172-31-18-150.eu-central-1.compute.internal" evaluatedNodes=4 feasibleNodes=3
+I0531 13:22:25.311136       1 eventhandlers.go:229] add event for scheduled pod default/acmeair-flightservice-76d48bfb54-47k8l
+I0531 13:22:25.321339       1 eventhandlers.go:172] add event for unscheduled pod default/acmeair-flightservice-76d48bfb54-st78x
+I0531 13:22:25.321524       1 eventhandlers.go:172] add event for unscheduled pod default/acmeair-flightservice-76d48bfb54-hv8rg
+I0531 13:22:25.321668       1 eventhandlers.go:209] delete event for unscheduled pod default/acmeair-flightservice-76d48bfb54-gkdjg
+I0531 13:22:25.324509       1 scheduler.go:604] "Successfully bound pod to node" pod="default/acmeair-flightservice-76d48bfb54-gkdjg" node="ip-172-31-30-18.eu-central-1.compute.internal" evaluatedNodes=4 feasibleNodes=3
+I0531 13:22:25.321418       1 eventhandlers.go:229] add event for scheduled pod default/acmeair-flightservice-76d48bfb54-gkdjg
+I0531 13:22:25.324960       1 scheduler.go:459] Attempting to schedule pod: default/acmeair-flightservice-76d48bfb54-st78x
+I0531 13:22:25.328625       1 scheduler.go:459] Attempting to schedule pod: default/acmeair-flightservice-76d48bfb54-hv8rg
+I0531 13:22:25.344168       1 eventhandlers.go:209] delete event for unscheduled pod default/acmeair-flightservice-76d48bfb54-st78x
+I0531 13:22:25.344386       1 scheduler.go:604] "Successfully bound pod to node" pod="default/acmeair-flightservice-76d48bfb54-st78x" node="ip-172-31-24-227.eu-central-1.compute.internal" evaluatedNodes=4 feasibleNodes=3
+I0531 13:22:25.344431       1 eventhandlers.go:229] add event for scheduled pod default/acmeair-flightservice-76d48bfb54-st78x
+I0531 13:22:25.377639       1 scheduler.go:604] "Successfully bound pod to node" pod="default/acmeair-flightservice-76d48bfb54-hv8rg" node="ip-172-31-18-150.eu-central-1.compute.internal" evaluatedNodes=4 feasibleNodes=3
+I0531 13:22:25.389311       1 eventhandlers.go:209] delete event for unscheduled pod default/acmeair-flightservice-76d48bfb54-hv8rg
+I0531 13:22:25.389363       1 eventhandlers.go:229] add event for scheduled pod default/acmeair-flightservice-76d48bfb54-hv8rg
