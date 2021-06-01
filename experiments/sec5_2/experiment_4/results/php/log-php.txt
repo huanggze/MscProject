@@ -1,3 +1,13 @@
+ubuntu@xxx$ kubectl get po
+NAME                           READY   STATUS    RESTARTS   AGE
+hello-world-5b9d848bb8-5hjpc   1/1     Running   0          11s
+hello-world-5b9d848bb8-6dzvn   1/1     Running   0          8m25s
+hello-world-5b9d848bb8-7zqqq   1/1     Running   0          11s
+hello-world-5b9d848bb8-8zz58   1/1     Running   0          11s
+hello-world-5b9d848bb8-mk8qt   1/1     Running   0          11s
+hello-world-5b9d848bb8-mkcvd   1/1     Running   0          11s
+
+
 -- Logs begin at Tue 2021-06-01 18:16:43 UTC, end at Tue 2021-06-01 19:21:08 UTC. --
 Jun 01 19:12:37 ip-172-31-24-70 kubelet[4415]: I0601 19:12:37.306430    4415 config.go:383] Receiving a new pod "hello-world-5b9d848bb8-6dzvn_default(9ba57896-080e-47a3-90ac-d3e16f19eec5)"
 Jun 01 19:12:37 ip-172-31-24-70 kubelet[4415]: I0601 19:12:37.308889    4415 kubelet.go:1919] SyncLoop (ADD, "api"): "hello-world-5b9d848bb8-6dzvn_default(9ba57896-080e-47a3-90ac-d3e16f19eec5)"
