@@ -1,3 +1,11 @@
+$ kubectl get po -o json | jq .items[].metadata.name | tr -d '"'
+hello-world-76ffbb69d4-24rmm
+hello-world-76ffbb69d4-tjz7t
+hello-world-76ffbb69d4-vtt6h
+hello-world-76ffbb69d4-xncgk
+hello-world-76ffbb69d4-zn964
+
+
 -- Logs begin at Wed 2021-06-02 15:30:00 UTC, end at Wed 2021-06-02 16:13:12 UTC. --
 Jun 02 16:12:52 ip-172-31-31-251 kubelet[4411]: I0602 16:12:52.007588    4411 config.go:383] Receiving a new pod "hello-world-76ffbb69d4-xncgk_default(6b23bd5a-a339-4700-a102-4361846e41ec)"
 Jun 02 16:12:52 ip-172-31-31-251 kubelet[4411]: I0602 16:12:52.007788    4411 kubelet.go:1919] SyncLoop (ADD, "api"): "hello-world-76ffbb69d4-xncgk_default(6b23bd5a-a339-4700-a102-4361846e41ec)"
