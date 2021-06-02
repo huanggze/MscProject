@@ -1,3 +1,11 @@
+kubectl get po -o json | jq .items[].metadata.name | tr -d '"'
+hello-world-bdb574d84-689vg
+hello-world-bdb574d84-kkgmx
+hello-world-bdb574d84-lnvrz
+hello-world-bdb574d84-ngwzq
+hello-world-bdb574d84-tz769
+
+
 -- Logs begin at Wed 2021-06-02 15:01:32 UTC, end at Wed 2021-06-02 15:18:06 UTC. --
 Jun 02 15:17:49 ip-172-31-31-251 kubelet[4411]: I0602 15:17:49.199189    4411 config.go:383] Receiving a new pod "hello-world-bdb574d84-lnvrz_default(43a94490-76c9-4309-b923-d3c5b3b845de)"
 Jun 02 15:17:49 ip-172-31-31-251 kubelet[4411]: I0602 15:17:49.199527    4411 kubelet.go:1919] SyncLoop (ADD, "api"): "hello-world-bdb574d84-lnvrz_default(43a94490-76c9-4309-b923-d3c5b3b845de)"
