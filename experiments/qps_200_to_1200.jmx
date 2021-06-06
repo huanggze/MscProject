@@ -58,7 +58,7 @@
               </elementProp>
             </collectionProp>
           </elementProp>
-          <stringProp name="HTTPSampler.domain">af164090f3fcf41ff88a3a078d06c3d5-755163d0f63dd816.elb.eu-central-1.amazonaws.com</stringProp>
+          <stringProp name="HTTPSampler.domain">a4ae1811305824ea8a0e4232b9ed8f90-2c2cdaab00c74edd.elb.eu-central-1.amazonaws.com</stringProp>
           <stringProp name="HTTPSampler.port">80</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -137,7 +137,7 @@
               </elementProp>
             </collectionProp>
           </elementProp>
-          <stringProp name="HTTPSampler.domain">af164090f3fcf41ff88a3a078d06c3d5-755163d0f63dd816.elb.eu-central-1.amazonaws.com</stringProp>
+          <stringProp name="HTTPSampler.domain">a4ae1811305824ea8a0e4232b9ed8f90-2c2cdaab00c74edd.elb.eu-central-1.amazonaws.com</stringProp>
           <stringProp name="HTTPSampler.port">80</stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
