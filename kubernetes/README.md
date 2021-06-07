@@ -244,7 +244,7 @@ $ curl xxxxx.eu-central-1.elb.amazonaws.com:9200
 
 To clear all es data:
 ```shell
-curl -XDELETE xxxxx.eu-central-1.elb.amazonaws.com:9200/_all
+curl -XDELETE xxxxx.eu-central-1.elb.amazonaws.com:9200/logstash*
 ```
 
 3. Install kibana for browsing logs
