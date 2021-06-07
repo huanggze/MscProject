@@ -11,8 +11,30 @@ data:
             resource: pod
       name:
         matches: "^(.*)"
-        as: "query_per_second"
+        as: "query_per_second_flightservice"
       metricsQuery: 'irate(http_server_requests_seconds_count{uri="/getrewardmiles"}[3m])'
+    - seriesQuery: http_server_requests_seconds_count
+      resources:
+        overrides:
+          namespace:
+            resource: namespace
+          pod:
+            resource: pod
+      name:
+        matches: "^(.*)"
+        as: "query_per_second_bookingservice"
+      metricsQuery: 'irate(http_server_requests_seconds_count{uri="/bookflights"}[3m])'
+    - seriesQuery: http_server_requests_seconds_count
+      resources:
+        overrides:
+          namespace:
+            resource: namespace
+          pod:
+            resource: pod
+      name:
+        matches: "^(.*)"
+        as: "query_per_second_customerservice"
+      metricsQuery: 'irate(http_server_requests_seconds_count{uri="/updateCustomerTotalMiles"}[3m])'
     "resourceRules":
       "cpu":
         "containerLabel": "container"
