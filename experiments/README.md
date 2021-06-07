@@ -7,7 +7,7 @@
 apt install default-jre -y
 wget https://apache.newfountain.nl//jmeter/binaries/apache-jmeter-5.4.1.tgz
 tar zxvf apache-jmeter-5.4.1.tgz
-export PATH="$PATH":/home/ubuntu/apache-jmeter-5.4.1/bin
+
 jmeter --version
 ```
 
