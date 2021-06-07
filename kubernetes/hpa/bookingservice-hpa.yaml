@@ -16,4 +16,4 @@ spec:
         name: query_per_second_bookingservice
       target:
         type: AverageValue
-        averageValue: "200"
+        averageValue: "100"
