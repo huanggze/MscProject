@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 labels = ["10", "20", "30", "40", "50"]
-data = [35.544, 41.111, 47.606, 60.931, 49.094]
+data = [41.897, 50.204, 55.879, 64.310, 55.507]
 
 x = np.array(labels)
 y = np.array(data)
