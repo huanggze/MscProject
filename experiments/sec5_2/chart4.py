@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-labels = ["Go", "Java", ".Net", "Node.js", "PHP", "Python"]
+labels = ["Go", "Java", "C#\n(.Net)", "JavaScript\n(Node.js)", "PHP", "Python3"]
 data = [4.929, 12.885, 5.260, 5.739, 5.473, 8.436]
 
 x = np.array(labels)
