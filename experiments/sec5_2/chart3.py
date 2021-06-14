@@ -12,7 +12,7 @@ y2 = np.array(data2)
 plt.subplot(211)
 for a,b in zip(x, y1):
     plt.text(a, b, b, ha='center', va='bottom', fontsize=8)
-plt.ylabel('Time (ms)')
+plt.ylabel('Time (s)')
 plt.ylim(0, 0.6)
 plt.bar(x, y1, width=0.3)
 
