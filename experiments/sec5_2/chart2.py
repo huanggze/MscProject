@@ -7,7 +7,7 @@ data = [1.856, 1.632, 1.559]
 x = np.array(labels)
 y = np.array(data)
 
-plt.ylabel('Time (seconds)')
+plt.ylabel('Time (s)')
 
 for a,b in zip(x, y):
     plt.text(a, b, b, ha='center', va='bottom', fontsize=9)
