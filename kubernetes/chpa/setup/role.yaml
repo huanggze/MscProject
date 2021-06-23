@@ -1,0 +1,51 @@
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: chpa-manager-role
+rules:
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+    verbs:
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - chpa.my.domain
+    resources:
+      - chpas
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - chpa.my.domain
+    resources:
+      - chpas/finalizers
+    verbs:
+      - update
+  - apiGroups:
+      - chpa.my.domain
+    resources:
+      - chpas/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - custom.metrics.k8s.io
+    resources:
+      - '*'
+    verbs:
+      - get
+      - list

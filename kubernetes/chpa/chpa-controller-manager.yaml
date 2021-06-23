@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chpa-controller-manager
+  namespace: kube-system
+  labels:
+    control-plane: chpa-controller-manager
+spec:
+  selector:
+    matchLabels:
+      control-plane: chpa-controller-manager
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        control-plane: chpa-controller-manager
+    spec:
+      securityContext:
+        runAsNonRoot: true
+      containers:
+        - name: manager
+          image: vasth/chpa:latest
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: 100m
+              memory: 30Mi
+            requests:
+              cpu: 100m
+              memory: 20Mi
+      serviceAccountName: chpa-controller-manager
